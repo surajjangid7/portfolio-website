@@ -1,0 +1,109 @@
+(function () {
+  function getThemeFromURL() {
+    var params = new URLSearchParams(window.location.search);
+    return params.get('theme') === 'light' ? 'light' : 'dark';
+  }
+
+  var theme = getThemeFromURL();
+  document.documentElement.setAttribute('data-theme', theme);
+
+  function syncNavLinks() {
+    document.querySelectorAll('a.js-navlink').forEach(function (a) {
+      var url = new URL(a.getAttribute('href'), window.location.href);
+      url.searchParams.set('theme', theme);
+      a.setAttribute('href', url.pathname + url.search);
+    });
+  }
+
+  function syncToggleIcon() {
+    var toggle = document.getElementById('themeToggle');
+    if (!toggle) return;
+    var sunSVG = '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><circle cx="12" cy="12" r="4"/><path d="M12 2v2M12 20v2M4.93 4.93l1.41 1.41M17.66 17.66l1.41 1.41M2 12h2M20 12h2M4.93 19.07l1.41-1.41M17.66 6.34l1.41-1.41"/></svg>';
+    var moonSVG = '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 12.79A9 9 0 1111.21 3a7 7 0 009.79 9.79z"/></svg>';
+    toggle.setAttribute('aria-pressed', theme === 'light' ? 'true' : 'false');
+    toggle.innerHTML = theme === 'dark' ? sunSVG : moonSVG;
+    toggle.setAttribute('data-tip', theme === 'dark' ? 'Light mode' : 'Dark mode');
+  }
+
+  function applyTheme(next) {
+    theme = next;
+    document.documentElement.setAttribute('data-theme', theme);
+    var url = new URL(window.location.href);
+    url.searchParams.set('theme', theme);
+    window.history.replaceState(null, '', url);
+    syncNavLinks();
+    syncToggleIcon();
+  }
+
+  document.addEventListener('DOMContentLoaded', function () {
+    syncNavLinks();
+    syncToggleIcon();
+    var toggle = document.getElementById('themeToggle');
+    if (toggle) {
+      toggle.addEventListener('click', function () {
+        applyTheme(theme === 'dark' ? 'light' : 'dark');
+      });
+    }
+    var startBtn = document.getElementById('startBtn');
+    if (startBtn) {
+      var url = new URL(startBtn.getAttribute('href'), window.location.href);
+      url.searchParams.set('theme', theme);
+      startBtn.setAttribute('href', url.pathname + url.search);
+    }
+
+    var reduceMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+
+    /* Scroll progress bar */
+    var bar = document.getElementById('scrollProgress');
+    var updateOnScroll = function () {
+      if (!bar) return;
+      var h = document.documentElement;
+      var scrolled = h.scrollTop || document.body.scrollTop;
+      var height = h.scrollHeight - h.clientHeight;
+      var pct = height > 0 ? (scrolled / height) * 100 : 0;
+      bar.style.width = pct + '%';
+    };
+    window.addEventListener('scroll', updateOnScroll, { passive: true });
+    updateOnScroll();
+
+    /* Entrance animation for above-the-fold elements */
+    var enterEls = document.querySelectorAll('.enter');
+    enterEls.forEach(function (el, i) {
+      if (reduceMotion) {
+        el.classList.add('visible');
+      } else {
+        el.style.setProperty('--d', (i * 0.08) + 's');
+        requestAnimationFrame(function () {
+          setTimeout(function () { el.classList.add('visible'); }, 30);
+        });
+      }
+    });
+
+    /* Scroll-triggered reveal */
+    var revealEls = document.querySelectorAll('.reveal');
+    if (reduceMotion || !('IntersectionObserver' in window)) {
+      revealEls.forEach(function (el) { el.classList.add('visible'); });
+    } else {
+      var io = new IntersectionObserver(function (entries) {
+        entries.forEach(function (entry) {
+          if (entry.isIntersecting) {
+            entry.target.classList.add('visible');
+            io.unobserve(entry.target);
+          }
+        });
+      }, { threshold: 0.15, rootMargin: '0px 0px -40px 0px' });
+      revealEls.forEach(function (el, i) {
+        el.style.setProperty('--d', Math.min(i * 0.06, 0.4) + 's');
+        io.observe(el);
+      });
+    }
+
+    /* Back to top */
+    var backToTop = document.getElementById('backToTop');
+    if (backToTop) {
+      backToTop.addEventListener('click', function () {
+        window.scrollTo({ top: 0, behavior: reduceMotion ? 'auto' : 'smooth' });
+      });
+    }
+  });
+})();
