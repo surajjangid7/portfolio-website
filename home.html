@@ -1,0 +1,124 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Home — Suraj Jangid</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,400;9..144,500;9..144,600&family=Inter:wght@400;500;600&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="style.css">
+<script src="theme.js" defer></script>
+</head>
+<body>
+
+<div class="scroll-progress" id="scrollProgress"></div>
+
+<nav>
+  <div class="wrap">
+    <a class="brand" href="home.html">suraj<span>.</span>dev</a>
+    <div class="navlinks">
+      <a class="js-navlink active" href="home.html">// home</a>
+      <a class="js-navlink" href="skills.html">// skills</a>
+      <a class="js-navlink" href="projects.html">// projects</a>
+      <a class="js-navlink" href="contact.html">// contact</a>
+    </div>
+    <button id="themeToggle" class="theme-toggle" aria-pressed="false">&#9790; dark</button>
+  </div>
+</nav>
+
+<header class="hero wrap">
+  <div class="hero-grid">
+    <div>
+      <div class="avatar enter">SJ</div>
+      <div class="badge enter"><span class="pulse-dot"></span>open to opportunities</div>
+      <div class="eyebrow enter">aspiring software developer</div>
+      <h1 class="enter">Suraj Jangid<br><em>builds things,</em><br>one problem at a time.</h1>
+      <p class="lede enter">I'm an aspiring software developer passionate about problem-solving and building useful web applications — currently deep in Data Structures &amp; Algorithms, competitive programming, and web development.</p>
+      <div class="hero-cta enter">
+        <a class="btn btn-solid js-navlink" href="projects.html">View projects</a>
+        <a class="btn btn-outline js-navlink" href="contact.html">Get in touch</a>
+      </div>
+    </div>
+    <div class="terminal enter">
+      <div class="term-bar">
+        <span class="dot r"></span><span class="dot y"></span><span class="dot g"></span>
+      </div>
+      <div class="term-body">
+        <div class="term-line">$ whoami</div>
+        <div id="typed"></div><span class="cursor"></span>
+      </div>
+    </div>
+  </div>
+</header>
+
+<section class="wrap reveal">
+  <div class="page-head">
+    <div class="eyebrow">focus areas</div>
+    <h2>Where I spend my time</h2>
+  </div>
+  <div class="focus-grid">
+    <div class="focus-card reveal">
+      <span class="fnum">01</span>
+      <h3>DSA &amp; Competitive Programming</h3>
+      <p>Working through data structures and algorithms daily, sharpening pattern recognition for problem-solving and contest-style challenges.</p>
+    </div>
+    <div class="focus-card reveal">
+      <span class="fnum">02</span>
+      <h3>Web Development</h3>
+      <p>Turning ideas into working products — from UI to logic — using HTML, CSS, and JavaScript, with real projects like Apna Resume Builder.</p>
+    </div>
+    <div class="focus-card reveal">
+      <span class="fnum">03</span>
+      <h3>Continuous Learning</h3>
+      <p>Picking up new tools and technologies as needed, treating every project as a chance to level up my engineering fundamentals.</p>
+    </div>
+  </div>
+</section>
+
+<section id="about" class="wrap reveal">
+  <div class="page-head">
+    <div class="eyebrow">about</div>
+    <h2>Currently learning in public</h2>
+  </div>
+  <p class="about-text">I am an aspiring software developer passionate about problem-solving and building useful web applications. I am currently focused on Data Structures and Algorithms, competitive programming, and web development. I enjoy learning new technologies and building projects that help me improve my programming skills.</p>
+
+  <ul class="current-list">
+    <li><span class="arrow">→</span> Practicing DSA problems and competitive programming regularly</li>
+    <li><span class="arrow">→</span> Building and shipping real web projects, not just tutorials</li>
+    <li><span class="arrow">→</span> Strengthening core CS fundamentals alongside practical dev skills</li>
+  </ul>
+</section>
+
+<footer class="wrap">
+  <span>&copy; 2026 Suraj Jangid</span>
+  <span>built with intent</span>
+</footer>
+
+<script>
+  var text = "suraj jangid \u2014 aspiring software developer";
+  var el = document.getElementById('typed');
+  var i = 0;
+  function type(){
+    if(i <= text.length){
+      el.textContent = text.slice(0, i);
+      i++;
+      setTimeout(type, 45);
+    } else {
+      setTimeout(function(){
+        var out = document.createElement('div');
+        out.className = 'term-out';
+        out.textContent = '\u2192 open to opportunities in software development';
+        document.querySelector('.term-body').insertBefore(out, document.querySelector('.cursor'));
+      }, 300);
+    }
+  }
+  if(window.matchMedia('(prefers-reduced-motion: reduce)').matches){
+    el.textContent = text;
+  } else {
+    setTimeout(type, 500);
+  }
+</script>
+
+</body>
+</html>
